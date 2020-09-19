@@ -1,0 +1,889 @@
+// This file is automatically compiled by Webpack, along with any other files
+// present in this directory. You're encouraged to place your actual application logic in
+// a relevant structure within app/javascript and only use these pack files to reference
+// that code so it'll be compiled.
+
+/*require("@rails/ujs").start()
+require("turbolinks").start()
+require("@rails/activestorage").start()
+import "channels"*/
+
+//= require jquery
+//= require jquery_ujs
+//= require app
+
+/*function generate_year_range(start, end) {
+  var years = "";
+  for (var year = start; year <= end; year++) {
+      years += "<option value='" + year + "'>" + year + "</option>";
+  }
+  return years;
+}
+
+var today = new Date();
+var currentMonth = today.getMonth();
+var currentYear = today.getFullYear();
+var selectYear = document.getElementById("year");
+var selectMonth = document.getElementById("month");
+
+var createYear = generate_year_range(1970, 2200);
+
+document.getElementById("year").innerHTML = createYear;
+
+var calendar = document.getElementById("calendar");
+var lang = calendar.getAttribute('data-lang');
+
+var months = ["1月", "2月", "3月", "4月", "5月", "6月", "7月", "8月", "9月", "10月", "11月", "12月"];
+var days = ["日", "月", "火", "水", "木", "金", "土"];
+
+var dayHeader = "<tr>";
+for (day in days) {
+  dayHeader += "<th data-days='" + days[day] + "'>" + days[day] + "</th>";
+}
+dayHeader += "</tr>";
+
+document.getElementById("thead-month").innerHTML = dayHeader;
+
+monthAndYear = document.getElementById("monthAndYear");
+showCalendar(currentMonth, currentYear);*/
+
+/*function next() {
+  currentYear = (currentMonth === 11) ? currentYear + 1 : currentYear;
+  currentMonth = (currentMonth + 1) % 12;
+  showCalendar(currentMonth, currentYear);
+}
+
+function previous() {
+  currentYear = (currentMonth === 0) ? currentYear - 1 : currentYear;
+  currentMonth = (currentMonth === 0) ? 11 : currentMonth - 1;
+  showCalendar(currentMonth, currentYear);
+}
+
+function jump() {
+  currentYear = parseInt(selectYear.value);
+  currentMonth = parseInt(selectMonth.value);
+  showCalendar(currentMonth, currentYear);
+}*/
+
+/*function showCalendar(month, year) {
+
+  var firstDay = ( new Date( year, month ) ).getDay();
+
+  tbl = document.getElementById("calendar-body");
+
+  tbl.innerHTML = "";
+
+  monthAndYear.innerHTML = months[month] + " " + year;
+  selectYear.value = year;
+  selectMonth.value = month;
+
+  // creating all cells
+  var date = 1;
+  for ( var i = 0; i < 6; i++ ) {
+     var row = document.createElement("tr");
+     
+     for ( var j = 0; j < 7; j++ ) {
+          if ( i === 0 && j < firstDay ) {
+              cell = document.createElement( "td" );
+              cellText = document.createTextNode("");
+              cell.appendChild(cellText);
+              row.appendChild(cell);
+          } else if (date > daysInMonth(month, year)) {
+              break;
+          } else {
+              cell = document.createElement("td");
+              cell.setAttribute("data-date", date);
+              cell.setAttribute("data-month", month + 1);
+              cell.setAttribute("data-year", year);
+              cell.setAttribute("data-month_name", months[month]);
+              cell.className = "date-picker";
+              cell.innerHTML = "<span>" + date + "</span>";
+
+              if ( date === today.getDate() && year === today.getFullYear() && month === today.getMonth() ) {
+                  cell.className = "date-picker selected";
+              }
+              row.appendChild(cell);
+              date++;
+          }
+      }
+
+      tbl.appendChild(row);
+  }
+
+}*/
+/*function next() {
+  currentYear = (currentMonth === 11) ? currentYear + 1 : currentYear;
+  currentMonth = (currentMonth + 1) % 12;
+  showCalendar(currentMonth, currentYear);
+}
+
+function previous() {
+  currentYear = (currentMonth === 0) ? currentYear - 1 : currentYear;
+  currentMonth = (currentMonth === 0) ? 11 : currentMonth - 1;
+  showCalendar(currentMonth, currentYear);
+}
+
+function jump() {
+  currentYear = parseInt(selectYear.value);
+  currentMonth = parseInt(selectMonth.value);
+  showCalendar(currentMonth, currentYear);
+}*/
+
+/*function daysInMonth(iMonth, iYear) {
+  return 32 - new Date(iYear, iMonth, 32).getDate();
+}*/
+
+var MkenCalendar = function(tagId){
+  var today = new Date();
+  // 今日の年月日
+  this.todayYear = today.getFullYear();
+  this.todayMonth = today.getMonth() + 1;
+  this.todayDate = today.getDate();
+
+  //	プロパティnenn.tukiは次月・前月クリックで変化する値
+  // カレンダーの年
+  this.nenn = this.todayYear;
+  // カレンダーの月
+  this.tuki = this.todayMonth;
+  // カレンダーの日
+  this.nichi = this.todayDate;
+  
+  // 年月日の区切り文字
+  this.spliter = "_";
+  // 現在選択されている日付
+  this.currentDay = 
+        this.nenn + this.spliter + this.tuki + this.spliter + this.nichi;
+  
+  this.tagId = tagId;
+};
+
+// 各月の日数
+MkenCalendar.prototype.monthDays =
+  new Array(31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31);
+// 表示されている月の前月の年
+MkenCalendar.prototype.prevNenn;
+// 表示されている月の次月の年
+MkenCalendar.prototype.nextNenn;
+// 表示されている月の前月
+MkenCalendar.prototype.prevTuki;
+// 表示されている月の次月
+MkenCalendar.prototype.nextTuki;
+
+MkenCalendar.prototype.setNengetsu = function(dore) {
+  // 次月
+  if(dore === 1){
+    // ひと月ﾌﾟﾗｽする
+    this.tuki++;
+  }
+  // 前月
+  if(dore === -1){
+    // ひと月ﾏｲﾅｽする
+    this.tuki--;
+  }
+  // 結果（月）が13ならば
+  if(this.tuki === 13){
+    // 年を一年ﾌﾟﾗｽして
+    this.nenn++;
+    // 月を一月に
+    this.tuki = 1;
+  }
+  // 結果（月）が0になったら
+  if(this.tuki === 0){
+    // 年を一年ﾏｲﾅｽして
+    this.nenn--;
+    // 月を12月に
+    this.tuki = 12;
+  }
+  // 閏年の場合
+  if(this.isLeapYear(this.nenn))
+    // ２月を２９日に
+    this.monthDays[1] = 29;
+  else
+    // その他は２８日に
+    this.monthDays[1] = 28;
+};
+
+MkenCalendar.prototype.setPrevNext = function() {
+  if(this.tuki === 1){
+    this.prevNenn = this.nenn - 1;
+    this.prevTuki = 12;
+  }else{
+    this.prevNenn = this.nenn;
+    this.prevTuki = this.tuki - 1;
+  }
+  if(this.tuki === 12){
+    this.nextNenn = this.nenn + 1;
+    this.nextTuki = 1;
+  }else{
+    this.nextNenn = this.nenn;
+    this.nextTuki = this.tuki + 1;
+  }
+};
+
+MkenCalendar.prototype.createHTML = function() {
+  // 年月の選択行を生成 =======================================
+  var rowNengetsu = document.createElement("tr");	
+  rowNengetsu.id = this.tagId + "NengetsuID";
+  
+  // 月の表示セル
+  var cellMm = document.createElement("td");
+  cellMm.id = this.tagId + "MmID";
+  cellMm.appendChild(document.createTextNode(""));
+  rowNengetsu.appendChild(cellMm);
+  
+  // 年の表示セル
+  var cellYy = document.createElement("td");
+  cellYy.colSpan = "4";
+  cellYy.id = this.tagId + "YyID";
+  cellYy.appendChild(document.createTextNode(""));
+  rowNengetsu.appendChild(cellYy);
+  
+  // 前へセル
+  var cellPrev = document.createElement("td");
+  cellPrev.id = this.tagId + "PrevID";
+  cellPrev.appendChild(document.createTextNode("←"));
+  rowNengetsu.appendChild(cellPrev);
+
+  // 次へセル
+  var cellNext = document.createElement("td");
+  cellNext.id = this.tagId + "NextID";
+  cellNext.appendChild(document.createTextNode("→"));
+  rowNengetsu.appendChild(cellNext);
+  
+  // 曜日の行を生成 =========================================
+  var rowWeeks = document.createElement("tr");
+  rowWeeks.id = this.tagId + "WeeksID";
+
+  // 曜日のセル
+  for(var i = 0; i <= 6; i++){
+    var cellWeek = document.createElement("td");
+    switch (i) {
+      case 0:
+        cellWeek.appendChild(document.createTextNode("SUN"));
+          break;
+      case 1:
+        cellWeek.appendChild(document.createTextNode("MON"));
+          break;
+      case 2:
+        cellWeek.appendChild(document.createTextNode("TUE"));
+          break;
+      case 3:
+        cellWeek.appendChild(document.createTextNode("WEN"));
+          break;
+      case 4:
+        cellWeek.appendChild(document.createTextNode("THU"));
+          break;
+      case 5:
+        cellWeek.appendChild(document.createTextNode("FRI"));
+          break;
+      case 6:
+        cellWeek.appendChild(document.createTextNode("SAT"));
+          break;
+      default:
+    }
+    rowWeeks.appendChild(cellWeek);
+  }
+
+  var tblBody = document.createElement("tbody");
+  tblBody.appendChild(rowNengetsu);
+  tblBody.appendChild(rowWeeks);
+
+  // 日付部
+  // 一週間を6週(行)繰り返し
+  for(var j = 0; j < 6; j++){
+    var row = document.createElement("tr");
+    // 1日を7日(列)繰り返し
+    for(var k = 0; k <= 6; k++){
+      var cell = document.createElement("td");
+      var cellText = document.createTextNode("");
+      cell.className = this.tagId + "DayCLS";
+      cell.appendChild(cellText);
+      row.appendChild(cell);
+    }
+    tblBody.appendChild(row);
+  }
+
+  var tbl = document.createElement("table");
+  tbl.id = this.tagId + "TableID";
+  tbl.appendChild(tblBody);
+
+  document.getElementById(this.tagId).appendChild(tbl);
+};
+
+MkenCalendar.prototype.setDays = function() {
+  // 月を埋め込み
+  var Mm = document.getElementById(this.tagId + "MmID");
+  var txtMm = document.createTextNode(this.tuki);
+  Mm.replaceChild(txtMm, Mm.firstChild);
+  // 年を埋め込み
+  var Yy = document.getElementById(this.tagId + "YyID");
+  var txtYy = document.createTextNode(this.nenn);
+  Yy.replaceChild(txtYy, Yy.firstChild);
+
+  // 表示される月のついたちの曜日(0:日曜～6:土曜)
+  var yobidate = new Date(this.nenn, this.tuki - 1, 1);
+  var tuitati_yobi = yobidate.getDay(); 
+  // 最初のマスの日付(その月の1日以前はマイナス何日となる)
+  var hizuke = 1 - tuitati_yobi;
+
+  // 前月・次月部分の年と月の値をセット
+  this.setPrevNext();					
+
+  // 閏年の場合
+  if(this.isLeapYear(this.nenn))
+    this.monthDays[1] = 29;
+  else
+    this.monthDays[1] = 28;
+
+  var txtHizuke;
+  // 日付マスの要素取得
+  var elements = document.getElementsByClassName(this.tagId + "DayCLS");
+  for (var i = 0; i < elements.length; i++) {
+    // 既にセット済みのクラスを初期化（削除）
+    elements[i].classList.remove(this.tagId + "PrevMonthCLS");
+    elements[i].classList.remove(this.tagId + "CurrentMonthCLS");
+    elements[i].classList.remove(this.tagId + "NextMonthCLS");
+
+    // 前月部分
+    if(hizuke <= 0){
+      elements[i].classList.add(this.tagId + "PrevMonthCLS");
+      txtHizuke =
+        document.createTextNode(this.monthDays[this.prevTuki-1]+hizuke);
+    }
+    // 当月部分
+    if((hizuke >= 1) && (hizuke <= this.monthDays[this.tuki-1])) {
+      elements[i].classList.add(this.tagId + "CurrentMonthCLS");
+      txtHizuke = document.createTextNode(hizuke);
+    }
+    // 次月部分
+    if((hizuke > this.monthDays[this.tuki - 1])) {
+      elements[i].classList.add(this.tagId + "NextMonthCLS");
+      txtHizuke =
+        document.createTextNode(hizuke - this.monthDays[this.tuki-1]);
+    }
+    elements[i].replaceChild(txtHizuke, elements[i].firstChild);
+    hizuke++;
+  }
+};
+
+MkenCalendar.prototype.setStyle = function() {
+  // テーブル全体のスタイル
+  // border paddingを含んだwidthに
+  var boxSizingTBL = "border-box";
+  // 境界線を重ねて表示
+  var borderCollapseTBL = "collapse";
+  // カレンダー全体の背景色
+  var backgroundColorTBL = "#edeaea";
+  // 全体のフォント
+  var fontFamilyTBL = "Meiryo";
+  // フォントの太さ
+  var fontWeightTBL = "600";
+  // 全体の文字表示位置（水平方向）
+  var textAlignTBL = "center";
+  // 全体の文字表示位置（垂直方向）
+  var verticalAlignTBL = "middle";
+
+  // 日付セルのスタイル
+  // 日付のマス幅
+  var widthCL = "28px";
+  // 日付のマス高さ
+  var heightCL = "23px";
+  // 日付のマス幅 border-box用
+  var widthCL = "37px";
+  // 日付のマス高さ border-box用
+  var heightCL = "26px";
+  // 日付のマス内余白
+  var paddingCL = "3px 9px 0px 0px";
+  // 日付文字サイズ
+  var fontSizeCL = "10px";
+  // 日付の文字表示位置（水平方向）
+  var textAlignCL = "right";
+  // 日付欄のカーソル形状
+  var cursorCL = "pointer";
+
+  // マウスオーバー時のフォントサイズ
+  var fontSizeOVER = "13px";
+
+  // 今日の場合の背景色
+  var backgroundColorTODAY = "#ffffff";
+  // クリックした日付の背景色
+  var clickDayBackGroundColor = "#ffff99";
+  
+  // 曜日の文字色と背景色
+  // 日曜の文字色(当月)
+  var colorSUN = "rgba(255,0,0,1.0)";
+  // 平日の文字色(当月)
+  var colorHEI = "rgba(85,85,85,1.0)";
+  // 土曜の文字色(当月)
+  var colorSAT = "rgba(0,153,255,1.0)";
+  // 日曜の文字色(当月以外)
+  var colorSUN2 = "rgba(255,0,0,0.2)";
+  // 平日の文字色(当月以外)
+  var colorHEI2 = "rgba(85,85,85,0.2)";
+  // 土曜の文字色(当月以外)
+  var colorSAT2 = "rgba(0,153,255,0.2)";
+  // 日曜の背景色
+  var backgroundColorSUN = "#dddddd";
+  // 土曜の背景色
+  var backgroundColorSAT = "#dddddd";
+
+  // 年月部のスタイル
+  // 年月等の背景色
+  var backgroundColorYM = "#f9f4f4";
+  // 年月等の文字色
+  var colorYM = "#555555";
+  // 月の文字サイズ
+  var fontSizeMM = "23px";
+  // 年の文字サイズ
+  var fontSizeYY = "11px";
+  // 矢印の文字サイズ
+  var fontSizeAL = "15px";
+  // 年月等の高さ
+  var heightYM = "30px";
+  // 年の文字位置（水平方向）
+  var textAlignYY = "left";
+  // 年の文字表示位置（垂直方向）
+  var verticalAlignYY = "bottom";
+  // 月のマス内余白
+  var paddingMM = "5px 0px 0px 0px";
+
+  // テーブル全体
+  var TableTag = document.getElementById(this.tagId + "TableID");
+  TableTag.style.boxSizing = boxSizingTBL;
+  TableTag.style.borderCollapse = borderCollapseTBL;
+  TableTag.style.backgroundColor = backgroundColorTBL;
+  TableTag.style.fontFamily = fontFamilyTBL;
+  TableTag.style.fontWeight = fontWeightTBL;
+  TableTag.style.textAlign = textAlignTBL;
+  TableTag.style.verticalAlign = verticalAlignTBL;
+
+  // 年月部
+  TableTag.rows[0].style.backgroundColor = backgroundColorYM;
+  TableTag.rows[0].style.color = colorYM;
+  TableTag.rows[0].style.height = heightYM;
+  TableTag.rows[0].cells[0].style.fontSize = fontSizeMM;
+  TableTag.rows[0].cells[0].style.padding = paddingMM;
+  TableTag.rows[0].cells[1].style.fontSize = fontSizeYY;
+  TableTag.rows[0].cells[1].style.textAlign = textAlignYY;
+  TableTag.rows[0].cells[1].style.verticalAlign = verticalAlignYY;
+  TableTag.rows[0].cells[2].style.fontSize = fontSizeAL;
+  TableTag.rows[0].cells[2].style.cursor = cursorCL;
+  TableTag.rows[0].cells[3].style.fontSize = fontSizeAL;
+  TableTag.rows[0].cells[3].style.cursor = cursorCL;
+  
+  // 曜日部
+  TableTag.rows[1].style.backgroundColor = backgroundColorYM;
+  for(var i = 0; i < TableTag.rows[1].cells.length; i++){
+    TableTag.rows[1].cells[i].style.width = widthCL;
+    TableTag.rows[1].cells[i].style.height = heightCL;
+    TableTag.rows[1].cells[i].style.fontSize = fontSizeCL;
+    if(i === 0){TableTag.rows[1].cells[i].style.color = colorSUN;}
+    if((i >= 1) && (i <= 5)){
+      TableTag.rows[1].cells[i].style.color = colorHEI;
+    }
+    if(i === 6){TableTag.rows[1].cells[i].style.color = colorSAT;}
+  }
+
+  // 日付セル部
+  for(var j = 2; j < TableTag.rows.length; j++){
+    var row = TableTag.rows[j];
+    for(var i = 0; i < row.cells.length; i++){
+      var cell = row.cells[i];
+      cell.style.width = widthCL;
+      cell.style.height = heightCL;
+      cell.style.padding = paddingCL;
+      cell.style.textAlign = textAlignCL;
+      cell.style.fontSize = fontSizeCL;
+      cell.style.cursor = cursorCL;
+      // 各曜日の文字色
+      if(i === 0){cell.style.color = colorSUN;}
+      if((i >= 1) && (i <= 5)){cell.style.color = colorHEI;}
+      if(i === 6){cell.style.color = colorSAT;}
+      // 各曜日の背景色
+      var checkDay =
+            this.nenn + this.spliter + this.tuki + this.spliter
+            + cell.firstChild.nodeValue;
+      var toDay =
+            this.todayYear + this.spliter + this.todayMonth
+            + this.spliter + this.todayDate;
+      if((checkDay === toDay) 
+        && (cell.classList.contains(this.tagId + "CurrentMonthCLS"))){
+        // 今日の場合
+        cell.style.backgroundColor = backgroundColorTODAY;
+      }else{
+        if(i === 0){cell.style.backgroundColor = backgroundColorSUN;}
+        if((i >= 1) && (i <= 5)){
+          cell.style.backgroundColor = backgroundColorTBL;}
+        if(i === 6){cell.style.backgroundColor = backgroundColorSAT;}
+      }
+      // 日付部分のマウスオーバー・マウスアウト（文字のサイズとカーソル形状）
+      cell.onmouseover = function(){
+        this.style.fontSize = fontSizeOVER;
+      };
+      cell.onmouseout = function(){
+        this.style.fontSize = fontSizeCL;
+      };
+
+      // 前月部の場合
+      if(cell.classList.contains(this.tagId + "PrevMonthCLS")){
+        // 文字の透明度
+        if(i === 0){cell.style.color = colorSUN2;}
+        if((i >= 1) && (i <= 5)){cell.style.color = colorHEI2;}
+        if(i === 6){cell.style.color = colorSAT2;}
+        // 祝日の場合
+        var syukuNo =
+            this.holiday(
+              this.prevNenn, this.prevTuki, cell.firstChild.nodeValue);
+        if(syukuNo >= 0){
+          cell.style.color = colorSUN2;
+        }
+        // 現在選択されている日付の場合は背景色を変更
+        checkDay =
+              this.prevNenn + this.spliter + this.prevTuki 
+              + this.spliter + cell.firstChild.nodeValue;
+        if(checkDay === this.currentDay){
+          cell.style.backgroundColor = clickDayBackGroundColor;
+        }
+      }
+      // 当月部の場合
+      if(cell.classList.contains(this.tagId + "CurrentMonthCLS")){
+        // 透明度
+        cell.style.opacity = "1";
+        // 祝日の場合
+        var syukuNo =
+            this.holiday(
+              this.nenn, this.tuki, cell.firstChild.nodeValue);
+        if(syukuNo >= 0){
+          cell.style.color = colorSUN;
+        }
+        // 現在選択されている日付の場合は背景色を変更
+        checkDay =
+              this.nenn + this.spliter + this.tuki
+              + this.spliter + cell.firstChild.nodeValue;
+        if(checkDay === this.currentDay){
+          cell.style.backgroundColor = clickDayBackGroundColor;
+        }
+      }
+      // 次月部の場合
+      if(cell.classList.contains(this.tagId + "NextMonthCLS")){
+        // 文字の透明度
+        if(i === 0){cell.style.color = colorSUN2;}
+        if((i >= 1) && (i <= 5)){cell.style.color = colorHEI2;}
+        if(i === 6){cell.style.color = colorSAT2;}
+        // 祝日の場合
+        var syukuNo =
+            this.holiday(
+              this.nextNenn, this.nextTuki, cell.firstChild.nodeValue);
+        if(syukuNo >= 0){
+          cell.style.color = colorSUN2;
+        }
+        // 現在選択されている日付の場合は背景色を変更
+        checkDay =
+              this.nextNenn + this.spliter + this.nextTuki
+              + this.spliter + cell.firstChild.nodeValue;
+        if(checkDay === this.currentDay){
+          cell.style.backgroundColor = clickDayBackGroundColor;
+        }
+      }
+    }
+  }
+};
+
+MkenCalendar.prototype.setEvent = function() {
+  var self = this;	
+
+  // 前月をクリック
+  self.addListener(document.getElementById(self.tagId + 'PrevID'),
+    'click', function(){
+      self.setNengetsu(-1);
+      self.setDays();
+      self.setStyle();
+  });
+
+  // 次月をクリック
+  self.addListener(document.getElementById(self.tagId + 'NextID'),
+    'click', function(){
+      self.setNengetsu(1);
+      self.setDays();
+      self.setStyle();
+  });
+
+  // 日付をクリック
+  var elements = document.getElementsByClassName(self.tagId + "DayCLS");
+  for (var i = 0; i < elements.length; i++) {
+    this.addListener(elements[i], 'click', 
+      function(){
+        // クリックした日付をプロパティに格納 -------------
+        var dd = this.firstChild.nodeValue;
+        // 前月部分クリック
+        // classListにPrevMonthCLSがあれば
+        if(this.classList.contains(self.tagId + "PrevMonthCLS")) {
+          self.currentDay =
+              self.prevNenn + self.spliter + self.prevTuki 
+              + self.spliter + dd;
+          self.removeDate(self.prevNenn, self.prevTuki, dd);
+        }
+        // 当月部分クリック
+        if(this.classList.contains(self.tagId + "CurrentMonthCLS")) {
+          self.currentDay =
+              self.nenn + self.spliter + self.tuki 
+              + self.spliter + dd;
+        }
+        // 次月部分クリック
+        if(this.classList.contains(self.tagId + "NextMonthCLS")) {
+          self.currentDay =
+              self.nextNenn + self.spliter + self.nextTuki 
+              + self.spliter + dd;
+          self.removeDate(self.nextNenn, self.nextTuki, dd);
+        }
+        // --------------------------------------------
+
+        self.setStyle();
+      }
+    );
+  }
+};
+
+MkenCalendar.prototype.addListener = function(elm, ev, listener) {
+  if(elm.addEventListener) {		// IE以外
+    elm.addEventListener(ev, listener, false);
+  } else if(elm.attachEvent) {	// IE
+    elm.attachEvent('on' + ev, listener);
+  } else {
+    throw new Error('イベントリスナーに未対応です。');
+  }
+};
+
+MkenCalendar.prototype.holiday = function(toshi, tsuki, hi){
+  var syukujitsu = [];
+  var syuku_cnt = 0;
+  var nichi;
+  var syukuDay;
+
+  /* 国民の祝日（決められた日　16日あり） */
+  // 元日(1月1日)
+  syukujitsu[0] = toshi + this.spliter + "1" + this.spliter + "1";
+  // 成人の日(1月の2月曜日)
+  nichi = this.howDay(toshi, 1, 2, 1);
+  syukujitsu[1] = toshi + this.spliter + "1" + this.spliter + nichi;
+  // 建国記念日(2月11日)
+  syukujitsu[2] = toshi + this.spliter + "2" + this.spliter + "11";
+  // 新天皇誕生日(2月23日) ************************************
+  if(toshi >= 2020) {
+    syukujitsu[3] = toshi + this.spliter + "2" + this.spliter + "23";
+  }
+  // 春分の日(前年の2月1日官報に掲載)・簡易計算法
+  var haru =
+      Math.floor(20.8431+0.242194*(toshi-1980)-Math.floor((toshi-1980)/4));
+  syukujitsu[4] = toshi + this.spliter + "3" + this.spliter + haru;
+  // 昭和の日(4月29日)
+  syukujitsu[5] = toshi + this.spliter + "4" + this.spliter + "29";
+  // 憲法記念日(5月3日)
+  syukujitsu[6] = toshi + this.spliter + "5" + this.spliter + "3";
+  // みどりの日(5月4日)
+  syukujitsu[7] = toshi + this.spliter + "5" + this.spliter + "4";
+  // こどもの日(5月5日)
+  syukujitsu[8] = toshi + this.spliter + "5" + this.spliter + "5";
+  // 海の日(7月第3月曜日)
+  nichi = this.howDay(toshi, 7, 3, 1);
+  syukujitsu[9] = toshi + this.spliter + "7" + this.spliter + nichi;
+  // 山の日(8月11日)
+  syukujitsu[10] = toshi + this.spliter + "8" + this.spliter + "11";
+  // 敬老の日(9月第3月曜日)
+  nichi = this.howDay(toshi, 9, 3, 1);
+  syukujitsu[11] = toshi + this.spliter + "9" + this.spliter + nichi;
+  // 秋分の日(前年の2月1日官報に掲載)・簡易計算法
+  var aki =
+      Math.floor(23.2488+0.242194*(toshi-1980)-Math.floor((toshi-1980)/4));
+  syukujitsu[12] = toshi + this.spliter + "9" + this.spliter + aki;
+  // 体育の日(10月第2月曜日)
+  nichi = this.howDay(toshi, 10, 2, 1);
+  syukujitsu[13] = toshi + this.spliter + "10" + this.spliter + nichi;
+  // 文化の日(11月3日)
+  syukujitsu[14] = toshi + this.spliter + "11" + this.spliter + "3";
+  // 勤労感謝の日(11月23日)
+  syukujitsu[15] = toshi + this.spliter + "11" + this.spliter + "23";
+  // 平成天皇誕生日(12月23日) *************************************
+  if(toshi <= 2018) {
+    syukujitsu[16] = toshi + this.spliter + "12" + this.spliter + "23";
+  }
+
+  /* 振替休日（祝日が日曜日の場合の月曜日) */
+  // 元日(1月1日)
+  syukuDay = new Date(toshi, 0, 1);
+  if (syukuDay.getDay() === 0) {
+    syukujitsu[17] = toshi + this.spliter + "1" + this.spliter + "2";
+  }
+  // 建国記念日(2月11日)
+  syukuDay = new Date(toshi, 1, 11);
+  if (syukuDay.getDay() === 0) {
+    syukujitsu[18] = toshi + this.spliter + "2" + this.spliter + "12";
+  }
+  // 新天皇誕生日(2月23日)
+  if(toshi >= 2020) {
+    syukuDay = new Date(toshi, 1, 23);
+    if (syukuDay.getDay() === 0) {
+      syukujitsu[19] = toshi + this.spliter + "2" + this.spliter + "24";
+    }
+  }
+  // 春分の日
+  syukuDay = new Date(toshi, 2, haru);
+  if (syukuDay.getDay() === 0) {
+    var haruDay = parseInt(haru) + 1;
+    syukujitsu[20] = toshi + this.spliter + "3" + this.spliter + haruDay;
+  }
+  // 昭和の日(4月29日)
+  syukuDay = new Date(toshi, 3, 29);
+  if (syukuDay.getDay() === 0) {
+    syukujitsu[21] = toshi + this.spliter + "4" + this.spliter + "30";
+  }
+  // 憲法記念日(5月3日)
+  syukuDay = new Date(toshi, 4, 3);
+  if (syukuDay.getDay() === 0) {
+    syukujitsu[22] = toshi + this.spliter + "5" + this.spliter + "6";
+  }
+  // みどりの日(5月4日)
+  syukuDay = new Date(toshi, 4, 4);
+  if (syukuDay.getDay() === 0) {
+    syukujitsu[23] = toshi + this.spliter + "5" + this.spliter + "6";
+  }
+  // こどもの日(5月5日)
+  syukuDay = new Date(toshi, 4, 5);
+  if (syukuDay.getDay() === 0) {
+    syukujitsu[24] = toshi + this.spliter + "5" + this.spliter + "6";
+  }
+  // 山の日(8月11日)
+  syukuDay = new Date(toshi, 7, 11);
+  if (syukuDay.getDay() === 0) {
+    syukujitsu[25] = toshi + this.spliter + "8" + this.spliter + "12";
+  }
+  // 秋分の日
+  syukuDay = new Date(toshi, 8, aki);
+  if (syukuDay.getDay() === 0) {
+    var akiDay = parseInt(aki) + 1;
+    syukujitsu[26] = toshi + this.spliter + "9" + this.spliter + akiDay;
+  }
+  // 文化の日(11月3日)
+  syukuDay = new Date(toshi, 10, 3);
+  if (syukuDay.getDay() === 0) {
+    syukujitsu[27] = toshi + this.spliter + "11" + this.spliter + "4";
+  }
+  // 勤労感謝の日(11月23日)
+  syukuDay = new Date(toshi, 10, 23);
+  if (syukuDay.getDay() === 0) {
+    syukujitsu[28] = toshi + this.spliter + "11" + this.spliter + "24";
+  }
+  // 平成天皇誕生日(12月23日)
+  if(toshi <= 2018) {
+    syukuDay = new Date(toshi, 11, 23);
+    if (syukuDay.getDay() === 0) {
+      syukujitsu[29] = toshi + this.spliter + "12" + this.spliter + "24";
+    }
+  }
+
+  /* その前後が祝日の場合の休日(祝日にはさまれた平日) */
+  var keiro = parseInt(syukujitsu[12].substr(7, 2));	// 敬老の日
+  var syubun = parseInt(syukujitsu[15].substr(7, 2));	// 秋分の日
+  if (syubun - keiro === 2) {
+    keiro++;
+    syukujitsu[30] = toshi + this.spliter + "9" + this.spliter + keiro;
+  }
+  
+  /* オリンピックの特例 *************************/
+  if(toshi === 2020) {
+    // 海の日
+    syukujitsu[9] = toshi + this.spliter + "7" + this.spliter + "23";
+    // スポーツ（体育）の日
+    syukujitsu[13] = toshi + this.spliter + "7" + this.spliter + "24";
+    // 山の日
+    syukujitsu[10] = toshi + this.spliter + "8" + this.spliter + "10";
+  }
+  /* 皇太子即位の特例 *************************/
+  syukujitsu[31] = "2019" + this.spliter + "4" + this.spliter + "30";
+  syukujitsu[32] = "2019" + this.spliter + "5" + this.spliter + "1";
+  syukujitsu[33] = "2019" + this.spliter + "5" + this.spliter + "2";
+  syukujitsu[34] = "2019" + this.spliter + "10" + this.spliter + "22";
+
+  // 指定の日が祝日（or休日）かを判定
+  for (var j = 0; j <= 30; j++) {
+    syuku_cnt =
+      syukujitsu.indexOf(toshi + this.spliter + tsuki + this.spliter + hi);
+  }
+  // 祝日の配列インデックスを返す　-1は祝日でない
+  return syuku_cnt;
+};
+
+
+MkenCalendar.prototype.isLeapYear = function(year) {
+  if(((year % 4 === 0) && (year % 100 !== 0)) || (year % 400 === 0)) {
+    return true;
+  } else {
+    return false;
+  }
+};
+
+getCurrentDay: 
+function (fm)  {
+  if(fm === 1) {	// 一桁表示
+    return this.currentDay;
+  } else {			// それ以外は二桁表示
+    var yymmdd = this.currentDay.split(this.spliter);
+    // yymmdd[0]	年
+    // yymmdd[1]	月の一桁表示
+    // yymmdd[2]	日の一桁表示
+    if (yymmdd[1] < 10) {yymmdd[1] = '0' + yymmdd[1];}
+    if (yymmdd[2] < 10) {yymmdd[2] = '0' + yymmdd[2];}
+    return yymmdd[0] + this.spliter + yymmdd[1] + this.spliter + yymmdd[2];
+  }
+};
+
+MkenCalendar.prototype.setSpliter = function(spliterStr) {
+  // 年月日の区切り文字
+  this.spliter = spliterStr;
+  // 現在選択されている日付
+  this.currentDay =
+    this.nenn + this.spliter + this.tuki + this.spliter + this.nichi;
+};
+
+MkenCalendar.prototype.showCalendar = function() {
+  // calendar枠作成と各マスのid.classをセット
+  this.createHTML();
+  // 日付の埋め込み
+  this.setDays();
+  // イベントをセット
+  this.setEvent();
+  // スタイルをセット
+  this.setStyle();
+};
+
+MkenCalendar.prototype.removeDate = function(nenn, tuki, nichi) {
+  this.nenn = nenn;
+  this.tuki = tuki;
+  this.nichi = nichi;
+  this.currentDay = 
+    this.nenn + this.spliter + this.tuki + this.spliter + this.nichi;
+  this.setDays();
+  this.setStyle();
+};
+
+var tagStr = "calendar1";
+// カレンダーのインスタンス（1）
+var cal = new MkenCalendar(tagStr);
+
+// カレンダーの表示（2）
+cal.showCalendar();
+// 二桁表示
+alert("今日は" + cal.getCurrentDay() + " です");
+
+// カレンダーの日付クリックイベント（3）
+$("." + tagStr + "DayCLS").on("click", function(){
+  // 一桁表示
+  alert(cal.getCurrentDay(1) + " がクリックされました");
+})
+
+// Uncomment to copy all static images under ../images to the output folder and reference
+// them with the image_pack_tag helper in views (e.g <%= image_pack_tag 'rails.png' %>)
+// or the `imagePath` JavaScript helper below.
+//
+// const images = require.context('../images', true)
+// const imagePath = (name) => images(name, true))

@@ -1,0 +1,191 @@
+/*.main h1{
+  text-align: center;
+  font-size: 45px;
+  margin-top: 100px;
+}
+.main h2{
+  font-size: 30px;
+  text-align: center;
+  margin-top: 50px;
+}
+.calender{
+  height: 500px;
+  margin: 50px;
+}*/
+/*table{
+  width: 1000px;
+  height: 250px;
+  margin: 0 auto;
+  border-collapse: collapse;
+}
+th{
+  text-align: center;
+  background-color: orange;
+  border: 1px solid black;
+}
+.sun{
+  color: red;
+}
+.sat{
+  color: blue;
+}
+td{
+  text-align: left;
+  border: 1px solid black;
+}
+td a{
+  display: inline-block;
+  text-align: left;
+  height: 80px;
+  width: 100%;
+  margin: 0px;
+  background-color: yellow;
+  cursor: pointer;
+}*/
+/*#calendar{
+  display: flex;
+  flex-wrap: wrap;
+}
+section {
+  margin: 10px;
+}
+h1{
+  font-size: 18px;
+}
+table{
+  border-spacing: 0;
+  border-collapse: collapse;
+}
+td{
+  border: 1px solid #ddd;
+  padding: 5px;
+  text-align: center;
+}
+td:first-child{
+  color: red;
+}
+td:last-child{
+  color:royalblue;
+}
+td.is-disabled{
+  color: #ccc;
+}
+h1{
+  font-size: 40px;
+}*/
+/*.wrapper {
+  margin: 15px auto;
+  max-width: 700px;
+}
+.container-calendar {
+  background: #ffffff;
+  padding: 15px;
+  width: 100%;
+  margin: 0 auto;
+  overflow: auto;
+  max-width: 1170px;
+}
+.button-container-calendar button {
+  cursor: pointer;
+  display: inline-block;
+  zoom: 1;
+  background: #00a2b7;
+  color: #fff;
+  border: 1px solid #0aa2b5;
+  border-radius: 4px;
+  padding: 5px 10px;
+}
+.table-calendar {
+  border-collapse: collapse;
+  width: 100%;
+}
+.table-calendar th,
+.table-calendar td{
+  padding: 10px;
+  border: 1px solid #e2e2e2;
+  text-align: center;
+  vertical-align: top;
+}
+.date-picker.selected {
+  font-weight: bold;
+  color: #fff;
+  background: #cc0000;
+}
+.date-picker.selected span {
+  border-bottom: 2px solid currentColor;
+}
+/* 日曜 */
+/*.date-picker:nth-child(1) {
+color: red;
+}
+/* 土曜 */
+/*.date-picker:nth-child(7) {
+color: blue;
+}
+#monthAndYear {
+  text-align: center;
+  margin-top: 0;
+}
+.button-container-calendar {
+  position: relative;
+  margin-bottom: 1em;
+  overflow: hidden;
+  clear: both;
+}
+#pre {
+  float: left;
+}
+#nex {
+  float: right;
+}
+.footer-container-calendar {
+  margin-top: 1em;
+  border-top: 1px solid #dadada;
+  padding: 10px 0;
+}
+.footer-container-calendar select {
+  cursor: pointer;
+  display: inline-block;
+  zoom: 1;
+  background: #ffffff;
+  color: #454545;
+  border: 1px solid #bfc5c5;
+  border-radius: 3px;
+  padding: 5px 1em;
+}*/
+/*.date-head{
+  margin: 40px auto;
+  text-align: center;
+}
+h1{
+  padding-top: 30px
+}
+table{
+  text-align: center;
+  padding: auto;
+  margin: auto;
+}
+td:hover,th:hover {
+  opacity: 0.5;
+}
+td:active{
+  color: red; 
+}
+td{
+  overflow: hidden;
+}
+a{
+  text-decoration: none;
+}
+a:hover{
+  background-color: red;
+
+}*/
+
+.calendar1{
+  width: 400px;
+  height: 400px;
+  padding: 10px;
+  margin: 20px auto 0 50px;
+  background-color: #aaaaaa;
+}
